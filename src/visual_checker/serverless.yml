@@ -1,0 +1,24 @@
+service: visualcomparison
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+
+  iamRoleStatements:
+    -  Effect: "Allow"
+       Action:
+         - "s3:*"
+       Resource: "*"
+
+functions:
+  compare:
+    handler: handler.compare
+    events: 
+      - s3: 
+          bucket: new-bloom-image-bucket
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .png
+
+plugins:
+  - serverless-offline
